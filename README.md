@@ -1,8 +1,15 @@
 # SISTEMA DE GERENCIAMENTO EMPRESARIAL
 
 Trabalho prático da disciplina **Algoritmos e Programação II** — UFRB / CETENS
-(Bacharelado em Sistemas de Informação – EaD). Sistema em linguagem **C** para
+(Bacharelado em Sistemas de Informação). Sistema em linguagem **C** para
 controle de clientes, produtos e vendas de uma pequena empresa.
+
+## Definição da equipe
+
+- Ausiane de Oliveira Costa
+- Houemakou Rimaud Djidonou
+- Nayara Andrade de Oliveira
+- Raimon Rios da Silva
 
 Enunciado completo: `docs/Modelo_Trabalho_Sistema_Gerenciamento_Empresarial_APII_2.pdf`
 
