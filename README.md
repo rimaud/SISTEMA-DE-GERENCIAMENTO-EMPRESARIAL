@@ -4,6 +4,8 @@ Trabalho prático da disciplina **Algoritmos e Programação II** — UFRB / CET
 (Bacharelado em Sistemas de Informação). Sistema em linguagem **C** para
 controle de clientes, produtos e vendas de uma pequena empresa.
 
+Acesse [sistema-de-gerenciamento-empresaria.vercel.app](https://sistema-de-gerenciamento-empresaria.vercel.app/)
+
 ## Definição da equipe
 
 - Ausiane de Oliveira Costa
