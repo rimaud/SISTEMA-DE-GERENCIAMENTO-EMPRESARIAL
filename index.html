@@ -6,8 +6,103 @@
     <title>Sistema de Gerenciamento Empresarial</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { display: flex; height: 100vh; background-color: #f4f6f9; color: #333; overflow: hidden; }
+        body { background-color: #f4f6f9; color: #333; overflow: hidden; height: 100vh; width: 100vw; }
         
+        /*  TELA DE ENTRADA (LANDING PAGE)  */
+        #landing-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2000;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .info-card {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 520px;
+            width: 90%;
+        }
+
+        .info-card h1 { color: #0f172a; margin-bottom: 6px; font-size: 1.7rem; }
+        .info-card h3 { color: #0284c7; margin-bottom: 20px; font-weight: 600; font-size: 1rem; }
+        
+        .info-details {
+            text-align: left;
+            background-color: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            color: #475569;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            border: 1px solid #e2e8f0;
+        }
+
+        .info-details h4 {
+            color: #1e293b;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .members-list {
+            list-style-type: none;
+            margin-bottom: 15px;
+            padding-left: 5px;
+        }
+
+        .members-list li {
+            position: relative;
+            padding-left: 18px;
+            margin-bottom: 4px;
+            font-weight: 500;
+            color: #334155;
+        }
+
+        .members-list li::before {
+            content: "•";
+            color: #0284c7;
+            font-weight: bold;
+            font-size: 1.2rem;
+            position: absolute;
+            left: 0;
+            top: -2px;
+        }
+
+        .btn-login {
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s, transform 0.1s;
+        }
+
+        .btn-login:hover { background-color: #0369a1; }
+        .btn-login:active { transform: scale(0.98); }
+
+        /*  SISTEMA PRINCIPAL  */
+        #app-container {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+        }
+
         .sidebar { width: 250px; background-color: #1e293b; color: #fff; display: flex; flex-direction: column; padding: 20px; }
         .sidebar h2 { font-size: 1.2rem; margin-bottom: 30px; color: #38bdf8; text-align: center; }
         .sidebar ul { list-style: none; }
@@ -52,88 +147,115 @@
 </head>
 <body>
 
-    <aside class="sidebar">
-        <h2>Gestão Empresarial</h2>
-        <ul>
-            <li><a id="nav-dashboard" class="active" onclick="switchTab('dashboard')">Painel Geral</a></li>
-            <li><a id="nav-clientes" onclick="switchTab('clientes')">Clientes</a></li>
-            <li><a id="nav-produtos" onclick="switchTab('produtos')">Produtos</a></li>
-        </ul>
-    </aside>
+    <!--  TELA DE ENTRADA (LANDING PAGE)  -->
+    <div id="landing-page">
+        <div class="info-card">
+            <h1>Sistema de Gestão Empresarial</h1>
+            <h3>Algoritmos e Programação II</h3>
+            
+            <div class="info-details">
+                <h4>Integrantes do Grupo:</h4>
+                <ul class="members-list">
+                    <li>- Ausiane de Oliveira Costa</li>
+                    <li>- - Houemakou Rimaud Djidonou</li>
+                    <li>- Nayara Andrade de Oliveira</li>
+                    <li>- Raimon Rios da Silva</li>
+                </ul>
 
-    <div class="main-content">
-        <header>
-            <div><strong>Status da Conexão C:</strong> <span id="c-status" style="color: orange;">Carregando C...</span></div>
-            <div class="user-info">Administrador</div>
-        </header>
+                <p style="margin-top: 10px; font-size: 0.85rem; color: #64748b;">
+                    <strong>Tecnologias:</strong> Backend em C com persistência em arquivos `.dat`, compilado para WebAssembly e Frontend em HTML5/CSS3.
+                </p>
+            </div>
 
-        <div class="content-body">
-            <!-- PAINEL GERAL -->
-            <section id="sec-dashboard" class="page-section active-section">
-                <h1 style="margin-bottom: 20px;">Visão Geral</h1>
-                <div class="cards">
-                    <div class="card">
-                        <h3>Total de Clientes</h3>
-                        <p id="total-clientes">0</p>
-                        <button onclick="switchTab('clientes')">Gerenciar Clientes →</button>
-                    </div>
-                    <div class="card">
-                        <h3>Produtos em Estoque</h3>
-                        <p id="total-produtos">0</p>
-                        <button onclick="switchTab('produtos')">Gerenciar Produtos →</button>
-                    </div>
-                </div>
-            </section>
+            <button class="btn-login" onclick="entrarNoSistema()">Acessar como Administrador</button>
+        </div>
+    </div>
 
-            <!-- CLIENTES -->
-            <section id="sec-clientes" class="page-section">
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2>Gestão de Clientes (C Backend)</h2>
-                        <button class="btn-add" onclick="openModal('modal-cliente')">+ Novo Cliente</button>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>CPF</th>
-                                <th>Nome</th>
-                                <th>Telefone</th>
-                                <th>E-mail</th>
-                                <th>Cidade</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-clientes">
-                            <!-- Inserido dinamicamente -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+    <!--  SISTEMA PRINCIPAL  -->
+    <div id="app-container">
+        <aside class="sidebar">
+            <h2>Gestão Empresarial</h2>
+            <ul>
+                <li><a id="nav-dashboard" class="active" onclick="switchTab('dashboard')">Painel Geral</a></li>
+                <li><a id="nav-clientes" onclick="switchTab('clientes')">Clientes</a></li>
+                <li><a id="nav-produtos" onclick="switchTab('produtos')">Produtos</a></li>
+            </ul>
+        </aside>
 
-            <!-- PRODUTOS -->
-            <section id="sec-produtos" class="page-section">
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2>Gestão de Produtos (C Backend)</h2>
-                        <button class="btn-add" onclick="openModal('modal-produto')">+ Novo Produto</button>
+        <div class="main-content">
+            <header>
+                <div><strong>Status do Backend (C):</strong> <span id="c-status" style="color: orange;">Carregando WASM...</span></div>
+                <div class="user-info">Administrador</div>
+            </header>
+
+            <div class="content-body">
+                <!-- PAINEL GERAL -->
+                <section id="sec-dashboard" class="page-section active-section">
+                    <h1 style="margin-bottom: 20px;">Visão Geral</h1>
+                    <div class="cards">
+                        <div class="card">
+                            <h3>Total de Clientes</h3>
+                            <p id="total-clientes">0</p>
+                            <button onclick="switchTab('clientes')">Gerenciar Clientes →</button>
+                        </div>
+                        <div class="card">
+                            <h3>Produtos em Estoque</h3>
+                            <p id="total-produtos">0</p>
+                            <button onclick="switchTab('produtos')">Gerenciar Produtos →</button>
+                        </div>
                     </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Nome</th>
-                                <th>Categoria</th>
-                                <th>Preço</th>
-                                <th>Estoque</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-produtos">
-                            <!-- Inserido dinamicamente -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+                </section>
+
+                <!-- CLIENTES -->
+                <section id="sec-clientes" class="page-section">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h2>Gestão de Clientes (C Backend)</h2>
+                            <button class="btn-add" onclick="openModal('modal-cliente')">+ Novo Cliente</button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>CPF</th>
+                                    <th>Nome</th>
+                                    <th>Telefone</th>
+                                    <th>E-mail</th>
+                                    <th>Cidade</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-clientes">
+                                <!-- Inserido dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- PRODUTOS -->
+                <section id="sec-produtos" class="page-section">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h2>Gestão de Produtos (C Backend)</h2>
+                            <button class="btn-add" onclick="openModal('modal-produto')">+ Novo Produto</button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nome</th>
+                                    <th>Categoria</th>
+                                    <th>Preço</th>
+                                    <th>Estoque</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-produtos">
+                                <!-- Inserido dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
 
@@ -149,7 +271,7 @@
                 <div class="form-group"><label>Cidade</label><input type="text" id="cli-cidade" required></div>
                 <div class="modal-buttons">
                     <button type="button" class="btn-cancel" onclick="closeModal('modal-cliente')">Cancelar</button>
-                    <button type="submit" class="btn-add">Salvar </button>
+                    <button type="submit" class="btn-add">Salvar via C</button>
                 </div>
             </form>
         </div>
@@ -166,14 +288,24 @@
                 <div class="form-group"><label>Quantidade Estoque</label><input type="number" id="prod-qtd" required></div>
                 <div class="modal-buttons">
                     <button type="button" class="btn-cancel" onclick="closeModal('modal-produto')">Cancelar</button>
-                    <button type="submit" class="btn-add">Salvar </button>
+                    <button type="submit" class="btn-add">Salvar via C</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- SCRIPT DE CONEXÃO COM O C (WEBASSEMBLY) -->
+    <!-- SCRIPT GERAL -->
     <script>
+        function entrarNoSistema() {
+            const landing = document.getElementById('landing-page');
+            landing.style.opacity = '0';
+            
+            setTimeout(() => {
+                landing.style.display = 'none';
+                document.getElementById('app-container').style.display = 'flex';
+            }, 400);
+        }
+
         function switchTab(tabName) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active-section'));
             document.querySelectorAll('.sidebar ul li a').forEach(link => link.classList.remove('active'));
@@ -184,10 +316,7 @@
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        // Converte string JS para ponteiro de memória C
-        function stringToC(str) {
-            return stringToNewUTF8(str);
-        }
+        function stringToC(str) { return stringToNewUTF8(str); }
 
         function salvarClienteC(e) {
             e.preventDefault();
@@ -200,18 +329,17 @@
 
                 const cod = _api_cadastrar_cliente(cpf, nome, tel, email, cidade);
 
-                // Libera memória alocada
                 _free(cpf); _free(nome); _free(tel); _free(email); _free(cidade);
 
                 if (cod > 0) {
                     atualizarContadores();
                     closeModal('modal-cliente');
-                    alert("Cliente cadastrado com sucesso no C!");
+                    alert("Cliente cadastrado com sucesso!");
                 } else {
                     alert("Erro: Limite de clientes atingido!");
                 }
             } else {
-                alert("O módulo C WebAssembly ainda não foi carregado!");
+                alert("O módulo C WebAssembly não foi carregado!");
             }
         }
 
@@ -230,12 +358,12 @@
                 if (cod > 0) {
                     atualizarContadores();
                     closeModal('modal-produto');
-                    alert("Produto cadastrado com sucesso no C!");
+                    alert("Produto cadastrado com sucesso!");
                 } else {
                     alert("Erro: Limite de produtos atingido!");
                 }
             } else {
-                alert("O módulo C WebAssembly ainda não foi carregado!");
+                alert("O módulo C WebAssembly não foi carregado!");
             }
         }
 
@@ -248,8 +376,8 @@
 
         var Module = {
             onRuntimeInitialized: function() {
-                _init_wasm(); // Carrega os arquivos de dados .dat 
-                document.getElementById('c-status').innerText = 'Conectado (WebAssembly)';
+                _init_wasm();
+                document.getElementById('c-status').innerText = 'Conectado e Pronto';
                 document.getElementById('c-status').style.color = 'green';
                 atualizarContadores();
             }
