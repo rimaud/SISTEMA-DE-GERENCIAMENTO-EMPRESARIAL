@@ -8,7 +8,6 @@ Acesse [sistema-de-gerenciamento-empresaria.vercel.app](https://sistema-de-geren
 
 ## Definição da equipe
 
-- Ausiane de Oliveira Costa
 - Houemakou Rimaud Djidonou
 - Nayara Andrade de Oliveira
 - Raimon Rios da Silva
