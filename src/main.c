@@ -2,8 +2,8 @@
  * Sistema de Gerenciamento Empresarial
  * Algoritmos e Programacao II - UFRB / CETENS
  *
- * Etapa 1: menu principal, cadastro de clientes e cadastro de produtos.
- * Etapa 2: vendas, consultas e relatorios.
+ * Modulos: clientes, produtos, vendas e consultas/relatorios.
+ * Os dados ficam gravados em arquivos binarios na pasta "dados".
  */
 
 #include <stdio.h>
@@ -16,6 +16,8 @@
 
 #include "cliente.h"
 #include "produto.h"
+#include "venda.h"
+#include "relatorio.h"
 #include "utils.h"
 
 #define PASTA_DADOS "dados"
@@ -31,7 +33,8 @@ static void garantirPastaDados(void)
 }
 
 static void exibirMenuPrincipal(const ListaClientes *clientes,
-                                const ListaProdutos *produtos)
+                                const ListaProdutos *produtos,
+                                const ListaVendas *vendas)
 {
     limparTela();
     linha('=', 46);
@@ -39,92 +42,38 @@ static void exibirMenuPrincipal(const ListaClientes *clientes,
     linha('=', 46);
     printf("1 - Gerenciar Clientes\n");
     printf("2 - Gerenciar Produtos\n");
-    printf("3 - Gerenciar Vendas          (Etapa 2)\n");
-    printf("4 - Consultas e Relatorios    (Etapa 2)\n");
-    printf("5 - Estatisticas\n");
+    printf("3 - Gerenciar Vendas\n");
+    printf("4 - Consultas e Relatorios\n");
     printf("0 - Sair\n");
     linha('=', 46);
-    printf(" Clientes: %-4d | Produtos: %-4d\n", clientes->total, produtos->total);
+    printf(" Clientes: %-4d | Produtos: %-4d | Vendas: %-4d\n",
+           clientes->total, produtos->total, vendas->total);
     linha('=', 46);
     printf("\n");
 }
 
-/* Estatisticas possiveis com os modulos ja concluidos. */
-static void exibirEstatisticas(const ListaClientes *clientes,
-                               const ListaProdutos *produtos)
-{
-    int i;
-    int pecas = 0;
-    int estoqueBaixo = 0;
-    int indiceMaisCaro = -1;
-
-    limparTela();
-    linha('=', 46);
-    printf("              ESTATISTICAS\n");
-    linha('=', 46);
-
-    for (i = 0; i < produtos->total; i++) {
-        pecas += produtos->itens[i].quantidade;
-
-        if (produtos->itens[i].quantidade <= ESTOQUE_BAIXO) {
-            estoqueBaixo++;
-        }
-
-        if (indiceMaisCaro < 0 ||
-            produtos->itens[i].preco > produtos->itens[indiceMaisCaro].preco) {
-            indiceMaisCaro = i;
-        }
-    }
-
-    printf("\n Clientes cadastrados     : %d\n", clientes->total);
-    printf(" Produtos cadastrados     : %d\n", produtos->total);
-    printf(" Pecas em estoque         : %d\n", pecas);
-    printf(" Valor total do estoque   : R$ %.2f\n", valorTotalEstoque(produtos, 0));
-    printf(" Produtos em falta (<= %d) : %d\n", ESTOQUE_BAIXO, estoqueBaixo);
-
-    if (indiceMaisCaro >= 0) {
-        printf(" Produto mais caro        : %s (R$ %.2f)\n",
-               produtos->itens[indiceMaisCaro].nome,
-               produtos->itens[indiceMaisCaro].preco);
-    }
-
-    printf("\n Vendas, faturamento e produto mais vendido\n");
-    printf(" serao incluidos na Etapa 2 do projeto.\n");
-
-    linha('=', 46);
-    pausar();
-}
-
-static void moduloEmDesenvolvimento(const char *nome)
-{
-    limparTela();
-    linha('=', 46);
-    printf("  MODULO: %s\n", nome);
-    linha('=', 46);
-    printf("\n  Este modulo faz parte da Etapa 2 do trabalho\n");
-    printf("  e ainda esta em desenvolvimento.\n");
-    pausar();
-}
-
 int main(void)
 {
-    ListaClientes clientes;
-    ListaProdutos produtos;
+    /* static: as listas sao grandes e ficam fora da pilha */
+    static ListaClientes clientes;
+    static ListaProdutos produtos;
+    static ListaVendas vendas;
     int opcao;
 
     garantirPastaDados();
 
     carregarClientes(&clientes);
     carregarProdutos(&produtos);
+    carregarVendas(&vendas);
 
     printf("Carregando dados...\n");
-    printf("  %d cliente(s) e %d produto(s) recuperados dos arquivos.\n",
-           clientes.total, produtos.total);
+    printf("  %d cliente(s), %d produto(s) e %d venda(s) recuperados dos arquivos.\n",
+           clientes.total, produtos.total, vendas.total);
     pausar();
 
     do {
-        exibirMenuPrincipal(&clientes, &produtos);
-        opcao = lerInteiro("Escolha uma opcao: ", 0, 5);
+        exibirMenuPrincipal(&clientes, &produtos, &vendas);
+        opcao = lerInteiro("Escolha uma opcao: ", 0, 4);
 
         switch (opcao) {
             case 1:
@@ -134,13 +83,10 @@ int main(void)
                 menuProdutos(&produtos);
                 break;
             case 3:
-                moduloEmDesenvolvimento("GERENCIAR VENDAS");
+                menuVendas(&vendas, &clientes, &produtos);
                 break;
             case 4:
-                moduloEmDesenvolvimento("CONSULTAS E RELATORIOS");
-                break;
-            case 5:
-                exibirEstatisticas(&clientes, &produtos);
+                menuRelatorios(&clientes, &produtos, &vendas);
                 break;
             case 0:
                 break;
@@ -151,6 +97,7 @@ int main(void)
     /* garantia extra: grava o estado atual antes de encerrar */
     salvarClientes(&clientes);
     salvarProdutos(&produtos);
+    salvarVendas(&vendas);
 
     limparTela();
     linha('=', 46);

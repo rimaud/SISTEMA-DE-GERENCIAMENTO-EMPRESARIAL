@@ -20,27 +20,62 @@ Enunciado completo: `docs/Modelo_Trabalho_Sistema_Gerenciamento_Empresarial_APII
 include/          cabeçalhos (.h) com structs e assinaturas das funções
   cliente.h       estrutura Cliente e operações do módulo
   produto.h       estrutura Produto e operações do módulo
+  venda.h         estruturas Venda / ItemVenda e operações do módulo
+  relatorio.h     consultas e relatórios
   utils.h         leitura validada do teclado, strings e formatação
 src/              implementações (.c)
-  main.c          menu principal e estatísticas
+  main.c          menu principal
   cliente.c       CRUD de clientes + gravação em arquivo
   produto.c       CRUD de produtos + estoque + gravação em arquivo
+  venda.c         registro de vendas com vários produtos + baixa no estoque
+  relatorio.c     relatório geral, rankings de produtos e clientes
   utils.c         funções auxiliares
 dados/            arquivos binários gerados em tempo de execução
   clientes.dat
   produtos.dat
+  vendas.dat
+Makefile          compilação do sistema
 ```
+
+## Como compilar e executar
+
+```
+make
+./sistema
+```
+
+Sem `make`:
+
+```
+gcc -Wall -Wextra -std=c99 -Iinclude src/main.c src/cliente.c src/produto.c src/venda.c src/relatorio.c src/utils.c -o sistema
+```
+
+A pasta `dados/` é criada automaticamente na primeira execução.
+
+## Módulos
+
+- **Clientes**: cadastrar, listar, buscar (código, nome ou CPF), alterar e excluir.
+- **Produtos**: cadastrar, listar, buscar, alterar, excluir, consultar estoque e
+  listar produtos com estoque baixo (≤ 5 unidades).
+- **Vendas**: registrar venda para cliente cadastrado com até 10 produtos
+  diferentes, calcular o valor total, dar baixa no estoque e impedir venda acima
+  do estoque disponível; listar vendas e buscar por código da venda ou do cliente.
+- **Consultas e relatórios**: relatório geral (total de clientes, total de
+  produtos, valor do estoque, quantidade de vendas, valor vendido, produto mais
+  vendido, cliente com maior volume de compras, produtos com estoque baixo),
+  ranking de produtos mais vendidos, ranking de clientes por compras, estoque
+  baixo e consulta de estoque.
 
 ## Conteúdos da disciplina aplicados
 
 | Conteúdo                   | Onde aparece                                                                                                                          |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | Funções / modularização | todo o projeto está dividido em módulos;`main()` só coordena o menu                                                              |
-| Estrutura                   | `Cliente` (`include/cliente.h`), `Produto` (`include/produto.h`)                                                              |
+| Estrutura                   | `Cliente` (`include/cliente.h`), `Produto` (`include/produto.h`), `Venda` e `ItemVenda` (`include/venda.h`)                    |
 | Ponteiros                   | `ListaClientes`, `ListaProdutos` passados por referência; `Cliente cliente = &lista->itens[i]` em `alterarCliente`           |
-| Arquivos                    | `carregarClientes` / `salvarClientes` e equivalentes de produto (`fopen`, `fread`, `fwrite`)                                |
+| Arquivos                    | `carregarClientes` / `salvarClientes` e equivalentes de produto e venda (`fopen`, `fread`, `fwrite`)                        |
 | Strings e caracteres        | `utils.c`: `removerEspacos`, `paraMaiusculas`, `somenteDigitos`, `contemTexto`, `formatarCPF`, validações de CPF/e-mail |
-| Recursão                   | `buscarIndicePorCodigo` (cliente.c), `buscarIndiceProduto` e `valorTotalEstoque` (produto.c)                                    |
+| Recursão                   | `buscarIndicePorCodigo` (cliente.c), `buscarIndiceProduto` e `valorTotalEstoque` (produto.c), `buscarIndiceVenda`, `valorTotalVendido` e `valorCompradoPorCliente` (venda.c) |
 | Validações                | códigos duplicados, CPF duplicado/inválido, e-mail, telefone, preço > 0, quantidade > 0, entradas não numéricas                  |
 
 ## Validações implementadas
@@ -53,6 +88,10 @@ dados/            arquivos binários gerados em tempo de execução
 - Quantidade mínima de 1 no cadastro.
 - Texto digitado onde se espera número é recusado sem travar o programa.
 - Toda exclusão pede confirmação.
+- Venda só aceita cliente e produtos cadastrados.
+- Quantidade vendida não pode passar do estoque disponível (considerando o que
+  já está no carrinho da mesma venda).
+- O estoque só é alterado depois que a venda é confirmada.
 
 ## Plano de desenvolvimento (preencher com a equipe)
 
